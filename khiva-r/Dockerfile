@@ -11,7 +11,7 @@ RUN apt-get update && \
 
 ADD install.R install.R
 
-# Cloning Khiva Java
+# Installing the library
 RUN Rscript install.R && \
     rm install.R
 
