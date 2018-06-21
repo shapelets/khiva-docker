@@ -1,12 +1,12 @@
 # intel-opencl
 
-Dockerfile with the Intel OpenCL driver (v5.0) and SDK (v7.0.0).
+Dockerfile with the Intel OpenCL Runtime (v16.1.2).
 
 
 ## Building image
 
 ```
-docker build --rm -t shapelets/intel-opencl:5.0-7.0.0 .
+docker build --rm -t shapelets/intel-opencl:16.1.2 .
 ```
 
 ## Pushing the image
@@ -14,8 +14,8 @@ docker build --rm -t shapelets/intel-opencl:5.0-7.0.0 .
 Before pushing the image, please ensure you entered your Docker hub credentials with the command: `docker login`
 
 ```
-docker tag shapelets/intel-opencl:5.0-7.0.0 shapelets/intel-opencl:latest
-docker push shapelets/intel-opencl:5.0-7.0.0
+docker tag shapelets/intel-opencl:16.1.2 shapelets/intel-opencl:latest
+docker push shapelets/intel-opencl:16.1.2
 docker push shapelets/intel-opencl:latest
 ```
 

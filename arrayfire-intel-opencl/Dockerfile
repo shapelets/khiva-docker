@@ -31,26 +31,23 @@ RUN git clone https://github.com/glfw/glfw.git && \
 # runtime due to lack of graphics support by docker - visit
 # http://arrayfire.org/docs/configuring_environment.htm#af_disable_graphics
 # for more information
-ENV AF_PATH=/opt/arrayfire AF_DISABLE_GRAPHICS=1
+ENV AF_DISABLE_GRAPHICS=1
 ARG COMPILE_GRAPHICS=OFF
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git -b master && \
-    cd arrayfire && git fetch --tags && git checkout tags/v3.6.0 && mkdir build && cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/opt/arrayfire-3 \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_CPU=ON \
-    -DBUILD_CUDA=OFF \
-    -DBUILD_OPENCL=ON \
-    -DBUILD_UNIFIED=ON \
-    -DBUILD_GRAPHICS=${COMPILE_GRAPHICS} \
-    -DBUILD_NONFREE=OFF \
-    -DBUILD_EXAMPLES=ON \
-    -DBUILD_TEST=ON \
-    -DBUILD_DOCS=OFF \
-    -DINSTALL_FORGE_DEV=ON \
-    -DUSE_FREEIMAGE_STATIC=OFF && \
+    cd arrayfire && git fetch --tags && git checkout tags/v3.5.1 && mkdir build && cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
+             -DCMAKE_BUILD_TYPE=Release \
+             -DBUILD_CPU=ON \
+             -DBUILD_CUDA=OFF \
+             -DBUILD_OPENCL=ON \
+             -DBUILD_UNIFIED=ON \
+             -DBUILD_GRAPHICS=${COMPILE_GRAPHICS} \
+             -DBUILD_NONFREE=OFF \
+             -DBUILD_EXAMPLES=OFF \
+             -DBUILD_TEST=OFF \
+             -DBUILD_DOCS=OFF \
+             -DUSE_FREEIMAGE_STATIC=OFF && \
     make -j8 && make install && \
-    mkdir -p ${AF_PATH} && ln -s /opt/arrayfire-3/* ${AF_PATH}/ && \
-    echo "${AF_PATH}/lib" >> /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig
 
 # Remove the glfw and arrayfire folders since they are already installed
