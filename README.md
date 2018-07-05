@@ -9,5 +9,7 @@ More concretely, each folder contains:
 - `khiva-python`: with the Khiva library and its Python binding installed.
 - `khiva-java`: with the Khiva library and its Java binding installed.
 - `khiva-r`: with the Khiva library and its R binding installed.
+- `khiva-ci-build`: prepares a Docker image with the Khiva dependencies satisfied to generate the Khiva installer for Travis CI.
+- `khiva-jupyter`: with the Khiva Python library environment and a Jupyter server running. It also provides some examples.
 
 The previous images are pushed to the [Shapelets Docker hub repository](https://hub.docker.com/u/shapelets).
