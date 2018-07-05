@@ -31,16 +31,13 @@ RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
 
 USER ${NB_USER}
 
-RUN python3 -m venv ${VENV_DIR} && \
-    pip3 install --no-cache-dir \
-         notebook==5.*
-
 RUN git clone https://github.com/shapelets/khiva-use-cases.git
 
 WORKDIR ${HOME}/khiva-use-cases/interactive-applications
 
 RUN python3 -m venv ${VENV_DIR} && \
     pip3 install --no-cache-dir \
-         -r ../requirements.txt
+         notebook==5.* && \
+    pip3 install --no-cache-dir -r ../requirements.txt
 
 CMD jupyter notebook --ip 0.0.0.0
