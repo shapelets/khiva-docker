@@ -1,7 +1,5 @@
 FROM shapelets/khiva-python:0.1.0
-LABEL maintainer="david.cuestao@shapelets.io"
-
-USER root
+LABEL maintainer="david.cuesta@shapelets.io"
 
 ENV NB_USER khiva-jupyter
 ENV NB_UID 1000

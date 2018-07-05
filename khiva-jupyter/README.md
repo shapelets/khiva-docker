@@ -1,7 +1,7 @@
 # khiva-jupyter
 
 Dockerfile with the Khiva Python library environment and a Jupyter server running.
-It provides some examples.
+It also provides some examples.
 
 ## Building image
 
@@ -25,10 +25,18 @@ docker push shapelets/khiva-jupyter:latest
 docker run -p 8888:8888 --name khiva-jupyter --rm -ti -td shapelets/khiva-jupyter:latest
 ```
 
-Then, run the next command in order to get the Jupyter token:
+Then, run the next command in order to get the Jupyter URL:
 
 ```
 docker exec -it khiva-jupyter jupyter notebook list
+```
+
+Next, it is just needed to copy the URL in the web browser.
+
+As an example, the URL should be something like:
+
+```
+http://0.0.0.0:8888/?token=05970e6560cfc00b071a3b13567e60273122fbe25eb87a89
 ```
 
 ## Installing Python Packages from Pypi
