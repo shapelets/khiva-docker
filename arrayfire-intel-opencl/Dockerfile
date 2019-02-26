@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y software-properties-common && \
     liblapacke-dev \
     libopenblas-dev \
     xorg-dev && \
+    apt-get install -y clang && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
@@ -23,7 +24,7 @@ RUN git clone https://github.com/glfw/glfw.git && \
     cd glfw && \
     mkdir build && \
     cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
+    CXX=clang++ CC=clang cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
     make -j4 && \
     make install
 
@@ -34,19 +35,19 @@ RUN git clone https://github.com/glfw/glfw.git && \
 ENV AF_DISABLE_GRAPHICS=1
 ARG COMPILE_GRAPHICS=OFF
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git -b master && \
-    cd arrayfire && git fetch --tags && git checkout tags/v3.5.1 && mkdir build && cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
+    cd arrayfire && git fetch --tags && git checkout tags/v3.6.2 && mkdir build && cd build && \
+    CXX=clang++ CC=clang cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
              -DCMAKE_BUILD_TYPE=Release \
-             -DBUILD_CPU=ON \
-             -DBUILD_CUDA=OFF \
-             -DBUILD_OPENCL=ON \
-             -DBUILD_UNIFIED=ON \
-             -DBUILD_GRAPHICS=${COMPILE_GRAPHICS} \
-             -DBUILD_NONFREE=OFF \
-             -DBUILD_EXAMPLES=OFF \
-             -DBUILD_TEST=OFF \
-             -DBUILD_DOCS=OFF \
-             -DUSE_FREEIMAGE_STATIC=OFF && \
+             -DAF_BUILD_CPU=ON \
+             -DAF_BUILD_CUDA=OFF \
+             -DAF_BUILD_OPENCL=ON \
+             -DAF_BUILD_UNIFIED=ON \
+             -DAF_BUILD_GRAPHICS=${COMPILE_GRAPHICS} \
+             -DAF_BUILD_NONFREE=OFF \
+             -DAF_BUILD_EXAMPLES=OFF \
+             -DAF_BUILD_TEST=OFF \
+             -DAF_BUILD_DOCS=OFF \
+             -DAF_USE_FREEIMAGE_STATIC=OFF && \
     make -j8 && make install && \
     ldconfig
 

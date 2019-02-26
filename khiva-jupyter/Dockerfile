@@ -1,4 +1,4 @@
-FROM shapelets/khiva-python:0.1.0
+FROM shapelets/khiva-python
 LABEL maintainer="david.cuesta@shapelets.io"
 
 ENV NB_USER khiva-jupyter
