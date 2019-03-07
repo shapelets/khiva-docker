@@ -1,4 +1,4 @@
-FROM shapelets/khiva-python
+FROM shapelets/khiva
 LABEL maintainer="david.cuesta@shapelets.io"
 
 ENV NB_USER khiva-jupyter
@@ -33,9 +33,9 @@ RUN git clone https://github.com/shapelets/khiva-use-cases.git
 
 WORKDIR ${HOME}/khiva-use-cases/interactive-applications
 
-RUN python3 -m venv ${VENV_DIR} && \
-    pip3 install --no-cache-dir \
-         notebook==5.* && \
+RUN python3 -m venv ${VENV_DIR} 
+RUN pip3 install --no-cache-dir tornado==5.* 
+RUN pip3 install --no-cache-dir notebook==5.* && \
     pip3 install --no-cache-dir -r ../requirements.txt
 
 CMD jupyter notebook --ip 0.0.0.0

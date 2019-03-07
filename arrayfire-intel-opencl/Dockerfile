@@ -19,12 +19,15 @@ RUN apt-get update && apt-get install -y software-properties-common && \
 
 WORKDIR /root
 
+ENV CXX clang++
+ENV CC clang
+
 # Build GLFW from source
 RUN git clone https://github.com/glfw/glfw.git && \
     cd glfw && \
     mkdir build && \
     cd build && \
-    CXX=clang++ CC=clang cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
     make -j4 && \
     make install
 
@@ -36,7 +39,7 @@ ENV AF_DISABLE_GRAPHICS=1
 ARG COMPILE_GRAPHICS=OFF
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git -b master && \
     cd arrayfire && git fetch --tags && git checkout tags/v3.6.2 && mkdir build && cd build && \
-    CXX=clang++ CC=clang cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
              -DCMAKE_BUILD_TYPE=Release \
              -DAF_BUILD_CPU=ON \
              -DAF_BUILD_CUDA=OFF \
