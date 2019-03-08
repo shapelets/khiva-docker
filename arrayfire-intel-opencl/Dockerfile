@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y software-properties-common && \
     liblapack-dev \
     liblapacke-dev \
     libopenblas-dev \
-    xorg-dev && \
-    apt-get install -y clang && \
+    xorg-dev \
+    clang && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
