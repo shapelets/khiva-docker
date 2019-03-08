@@ -6,7 +6,7 @@ Dockerfile based on the Dockerfile contained in the `intel-opencl` folder. In ad
 ## Building image
 
 ```
-docker build --rm -t shapelets/arrayfire-intel-opencl:3.5.1 .
+docker build --rm -t shapelets/arrayfire-intel-opencl:3.6.2 .
 ```
 
 ## Pushing the image
@@ -14,8 +14,8 @@ docker build --rm -t shapelets/arrayfire-intel-opencl:3.5.1 .
 Before pushing the image, please ensure you entered your Docker hub credentials with the command: `docker login`
 
 ```
-docker tag shapelets/arrayfire-intel-opencl:3.5.1 shapelets/arrayfire-intel-opencl:latest
-docker push shapelets/arrayfire-intel-opencl:3.5.1
+docker tag shapelets/arrayfire-intel-opencl:3.6.2 shapelets/arrayfire-intel-opencl:latest
+docker push shapelets/arrayfire-intel-opencl:3.6.2
 docker push shapelets/arrayfire-intel-opencl:latest
 ```
 

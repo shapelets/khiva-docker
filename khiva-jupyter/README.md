@@ -6,7 +6,7 @@ It also provides some examples.
 ## Building image
 
 ```
-docker build --rm -t shapelets/khiva-jupyter:0.1.0 .
+docker build --rm -t shapelets/khiva-jupyter:0.2.0 .
 ```
 
 ## Pushing the image
@@ -14,8 +14,8 @@ docker build --rm -t shapelets/khiva-jupyter:0.1.0 .
 Before pushing the image, please ensure you entered your Docker hub credentials with the command: `docker login`
 
 ```
-docker tag shapelets/khiva-jupyter:0.1.0 shapelets/khiva-jupyter:latest
-docker push shapelets/khiva-jupyter:0.1.0
+docker tag shapelets/khiva-jupyter:0.2.0 shapelets/khiva-jupyter:latest
+docker push shapelets/khiva-jupyter:0.2.0
 docker push shapelets/khiva-jupyter:latest
 ```
 

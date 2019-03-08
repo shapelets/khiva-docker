@@ -6,7 +6,7 @@ Dockerfile with the Khiva library and its Python binding installed.
 ## Building image
 
 ```
-docker build --rm -t shapelets/khiva-python:0.1.0 .
+docker build --rm -t shapelets/khiva-python:0.2.0 .
 ```
 
 ## Pushing the image
@@ -14,8 +14,8 @@ docker build --rm -t shapelets/khiva-python:0.1.0 .
 Before pushing the image, please ensure you entered your Docker hub credentials with the command: `docker login`
 
 ```
-docker tag shapelets/khiva-python:0.1.0 shapelets/khiva-python:latest
-docker push shapelets/khiva-python:0.1.0
+docker tag shapelets/khiva-python:0.2.0 shapelets/khiva-python:latest
+docker push shapelets/khiva-python:0.2.0
 docker push shapelets/khiva-python:latest
 ```
 
