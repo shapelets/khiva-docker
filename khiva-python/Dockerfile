@@ -5,7 +5,7 @@ WORKDIR /root
 
 # Cloning Khiva Python
 RUN git clone https://github.com/shapelets/khiva-python.git && \
-    cd khiva-python && git fetch --tags && git checkout tags/v0.2.0 && \
+    cd khiva-python && git fetch --tags && git checkout tags/v0.2.2 && \
     pip3 install -r requirements.txt && \
     python3 setup.py install
 
