@@ -1,6 +1,6 @@
 # khiva
 
-Dockerfile with all the Khiva dependencies satisfied (i.e. OpenCL, ArrayFire, Doxygen, GraphViz, Sphinx and Java JDK 8).
+Dockerfile with all the Khiva dependencies satisfied (i.e. CUDA, ArrayFire, Doxygen, GraphViz, Sphinx and Java JDK 8).
 
 
 ## Building image

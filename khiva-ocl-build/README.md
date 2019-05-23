@@ -6,7 +6,7 @@ Dockerfile with all the Khiva dependencies satisfied (i.e. OpenCL, ArrayFire, Co
 ## Building image
 
 ```
-docker build --rm -t shapelets/khiva-ocl-build:0.2.0 .
+docker build --rm -t shapelets/khiva-ocl-build:0.2.2 .
 ```
 
 ## Pushing the image
@@ -14,8 +14,8 @@ docker build --rm -t shapelets/khiva-ocl-build:0.2.0 .
 Before pushing the image, please ensure you entered your Docker hub credentials with the command: `docker login`
 
 ```
-docker tag shapelets/khiva-ocl-build:0.2.0 shapelets/khiva-ocl-build:latest
-docker push shapelets/khiva-ocl-build:0.2.0
+docker tag shapelets/khiva-ocl-build:0.2.2 shapelets/khiva-ocl-build:latest
+docker push shapelets/khiva-ocl-build:0.2.2
 docker push shapelets/khiva-ocl-build:latest
 ```
 

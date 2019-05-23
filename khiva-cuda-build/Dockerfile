@@ -1,4 +1,4 @@
-FROM shapelets/arrayfire-intel-opencl
+FROM shapelets/arrayfire-cuda
 LABEL maintainer="oscar.torreno@shapelets.io"
 
 # Update the apt-get cache

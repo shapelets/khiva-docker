@@ -1,4 +1,4 @@
-FROM shapelets/khiva-ocl-build
+FROM shapelets/khiva-cuda-build
 LABEL maintainer="oscar.torreno@shapelets.io"
 
 WORKDIR /root
