@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
+COPY *.patch ./
 
 ENV CXX clang++
 ENV CC clang
@@ -29,7 +30,9 @@ RUN git clone https://github.com/glfw/glfw.git && \
     cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
     make -j4 && \
-    make install
+    make install && \
+	cd .. && \
+	cd ..
 
 # AF_DISABLE_GRAPHICS - Environment variable to disable graphics at
 # runtime due to lack of graphics support by docker - visit
@@ -38,7 +41,9 @@ RUN git clone https://github.com/glfw/glfw.git && \
 ENV AF_DISABLE_GRAPHICS=1
 ARG COMPILE_GRAPHICS=OFF
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git -b master && \
-    cd arrayfire && git fetch --tags && git checkout tags/v3.6.2 && mkdir build && cd build && \
+    cd arrayfire && git fetch --tags && git checkout tags/v3.6.2 && \ 
+	git apply /root/fix_sort.patch && git apply /root/fix_sparse.patch && git apply /root/fix_queue.patch && \
+	mkdir build && cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
              -DCMAKE_BUILD_TYPE=Release \
              -DAF_BUILD_CPU=ON \
@@ -50,6 +55,7 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git -b master &
              -DAF_BUILD_EXAMPLES=OFF \
              -DAF_BUILD_TEST=OFF \
              -DAF_BUILD_DOCS=OFF \
+             -DAF_WITH_LOGGING=OFF \
              -DAF_USE_FREEIMAGE_STATIC=OFF && \
     make install -j8 && \
     ldconfig
