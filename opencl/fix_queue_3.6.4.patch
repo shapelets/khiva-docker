@@ -1,0 +1,13 @@
+diff --git a/src/backend/cpu/queue.hpp b/src/backend/cpu/queue.hpp
+index 26f96159..2d08c13b 100644
+--- a/src/backend/cpu/queue.hpp
++++ b/src/backend/cpu/queue.hpp
+@@ -39,7 +39,7 @@ class queue_impl {
+ 
+ #include <async_queue.hpp>
+ #define __SYNCHRONOUS_ARCH 0
+-typedef async_queue queue_impl;
++typedef threads::async_queue queue_impl;
+ 
+ #endif
+ 
