@@ -4,7 +4,6 @@ docker build --target build-arrayfire -t shapelets/arrayfire-opencl-builder:3.6.
 docker build --target arrayfire-intel-opencl -t shapelets/arrayfire-intel-opencl:3.6.2 .
 docker build --target build-khiva -t shapelets/khiva-builder:0.4.0 .
 docker build --target khiva-intel-opencl -t shapelets/khiva:0.4.0 .
-REGISTRY=192.168.10.10:8083
 docker tag shapelets/khiva-opencl-builder-base:0.4.0 $REGISTRY/shapelets/khiva-opencl-builder-base:0.4.1
 docker tag shapelets/arrayfire-opencl-builder:3.6.2 $REGISTRY/shapelets/arrayfire-opencl-builder:3.6.2
 docker tag shapelets/arrayfire-intel-opencl:3.6.2 $REGISTRY/shapelets/arrayfire-intel-opencl:3.6.2
