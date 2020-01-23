@@ -1,6 +1,6 @@
 FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS build
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \    
+    apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -56,9 +56,15 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
 
 FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS arrayfire-intel-opencl
 COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
-RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libopenblas-base \
+    libfftw3-3 \
+    liblapacke && \
+    echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig
 
+# TODO: Add ctest step at the end when tests are stable in terms of accuracy.
 FROM build AS build-khiva
 WORKDIR /root
 COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
