@@ -60,8 +60,11 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig
 
 FROM base AS build-khiva
+COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-RUN git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
+RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
+    ldconfig && \
+    git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
     cd khiva && \
     git checkout tags/v0.4.0 && \
 	mkdir build && \
