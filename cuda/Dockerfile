@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     liblapacke-dev \
     libopenblas-dev \
+    openjdk-8-jdk \
     python3-pip && \
     pip3 install setuptools && \
     pip3 install conan --upgrade && \
@@ -59,6 +60,7 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig
 
 FROM base AS build-khiva
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
     cd khiva && \
     git checkout tags/v0.4.0 && \
@@ -73,7 +75,7 @@ RUN git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
         -DKHIVA_BUILD_EXAMPLES=OFF \
         -DKHIVA_BUILD_DOCUMENTATION=OFF \
         -DKHIVA_USE_CONAN=ON \
-        -DKHIVA_BUILD_JNI_BINDINGS=OFF && \
+        -DKHIVA_BUILD_JNI_BINDINGS=ON && \
     cmake --build . --target install -- -j8
 
 FROM arrayfire-cuda AS khiva-cuda
