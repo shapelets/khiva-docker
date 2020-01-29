@@ -45,7 +45,7 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
              -DAF_BUILD_OPENCL=OFF \
              -DCUDA_cublas_device_LIBRARY=/usr/local/cuda/lib64 \
              -DAF_BUILD_UNIFIED=ON \
-             -DAF_BUILD_FORGE=OFF \
+             -DAF_WITH_GRAPHICS=OFF \
              -DAF_WITH_NONFREE=OFF \
              -DAF_BUILD_EXAMPLES=OFF \
              -DBUILD_TESTING=ON \
