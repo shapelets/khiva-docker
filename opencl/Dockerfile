@@ -64,15 +64,14 @@ RUN apt-get update && \
     echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig
 
-# TODO: Add ctest step at the end when tests are stable in terms of accuracy.
 FROM build AS build-khiva
 WORKDIR /root
 COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig && \
-    add-apt-repository ppa:intel-opencl/intel-opencl && \
     apt-get update && \
-    apt-get install -y intel-opencl-icd clinfo && \
+    apt-get install -y openjdk-8-jdk && \
     git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
     cd khiva && \
     git checkout tags/v0.4.0 && \
@@ -86,7 +85,7 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
         -DKHIVA_BUILD_EXAMPLES=OFF \
         -DKHIVA_BUILD_DOCUMENTATION=OFF \
         -DKHIVA_USE_CONAN=ON \
-        -DKHIVA_BUILD_JNI_BINDINGS=OFF && \
+        -DKHIVA_BUILD_JNI_BINDINGS=ON && \
     cmake --build . --target install -- -j8
 
 FROM arrayfire-intel-opencl as khiva-intel-opencl

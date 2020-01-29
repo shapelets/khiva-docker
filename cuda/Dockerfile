@@ -32,8 +32,10 @@ FROM base AS build-arrayfire
 ENV AF_DISABLE_GRAPHICS=1
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
     cd arrayfire && \
-    git checkout tags/v3.6.4 && \ 
-	git apply /root/fix_queue_3.6.4.patch && \
+    git checkout tags/v3.6.2 && \ 
+	git apply /root/fix_queue.patch && \
+    git apply /root/fix_sort.patch && \
+    git apply /root/fix_sparse.patch && \
     mkdir build && cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/opt/arrayfire \
              -DCMAKE_BUILD_TYPE=Release \
