@@ -74,7 +74,7 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     apt-get install -y openjdk-8-jdk && \
     git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
     cd khiva && \
-    git checkout tags/v0.4.0 && \
+    git checkout tags/v0.5.0 && \
 	mkdir build && \
     cd build && \
     conan install .. --build missing && \
