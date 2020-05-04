@@ -1,4 +1,4 @@
-FROM nvidia/cuda AS base
+FROM nvidia/cuda:10.1-devel-ubuntu18.04 AS khiva-cuda-builder-base
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
     build-essential \
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     liblapacke-dev \
     libopenblas-dev \
+    openjdk-8-jdk \
     python3-pip && \
     pip3 install setuptools && \
     pip3 install conan --upgrade && \
@@ -28,12 +29,14 @@ ENV CC gcc-7
 WORKDIR /root
 
 COPY *.patch ./
-FROM base AS build-arrayfire
+FROM khiva-cuda-builder-base AS arrayfire-cuda-builder
 ENV AF_DISABLE_GRAPHICS=1
 RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
     cd arrayfire && \
-    git checkout tags/v3.6.4 && \ 
-	git apply /root/fix_queue_3.6.4.patch && \
+    git checkout tags/v3.6.2 && \ 
+	git apply /root/fix_queue.patch && \
+    git apply /root/fix_sort.patch && \
+    git apply /root/fix_sparse.patch && \
     mkdir build && cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/opt/arrayfire \
              -DCMAKE_BUILD_TYPE=Release \
@@ -42,7 +45,7 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
              -DAF_BUILD_OPENCL=OFF \
              -DCUDA_cublas_device_LIBRARY=/usr/local/cuda/lib64 \
              -DAF_BUILD_UNIFIED=ON \
-             -DAF_BUILD_FORGE=OFF \
+             -DAF_WITH_GRAPHICS=OFF \
              -DAF_WITH_NONFREE=OFF \
              -DAF_BUILD_EXAMPLES=OFF \
              -DBUILD_TESTING=ON \
@@ -51,15 +54,14 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
              -DAF_WITH_STATIC_FREEIMAGE=OFF && \
     cmake --build . --target install -- -j8
 
-FROM nvidia/cuda:10.2-runtime-ubuntu18.04 AS arrayfire-cuda
-COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
+FROM khiva-cuda-builder-base AS khiva-cuda-builder
+COPY --from=arrayfire-cuda-builder /opt/arrayfire /opt/arrayfire
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
-    ldconfig
-
-FROM base AS build-khiva
-RUN git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
+    ldconfig && \
+    git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
     cd khiva && \
-    git checkout tags/v0.4.0 && \
+    git checkout tags/v0.5.0 && \
 	mkdir build && \
     cd build && \
     conan install .. --build missing && \
@@ -71,10 +73,20 @@ RUN git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
         -DKHIVA_BUILD_EXAMPLES=OFF \
         -DKHIVA_BUILD_DOCUMENTATION=OFF \
         -DKHIVA_USE_CONAN=ON \
-        -DKHIVA_BUILD_JNI_BINDINGS=OFF && \
+        -DKHIVA_BUILD_JNI_BINDINGS=ON && \
     cmake --build . --target install -- -j8
 
+FROM nvidia/cuda:10.1-runtime-ubuntu18.04 AS arrayfire-cuda
+COPY --from=arrayfire-cuda-builder /opt/arrayfire /opt/arrayfire
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libopenblas-base \
+    libfftw3-3 \
+    liblapacke && \
+    echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
+    ldconfig
+
 FROM arrayfire-cuda AS khiva-cuda
-COPY --from=build-khiva /opt/khiva /opt/khiva
+COPY --from=khiva-cuda-builder /opt/khiva /opt/khiva
 RUN echo /opt/khiva/lib > /etc/ld.so.conf.d/khiva.conf && \
     ldconfig
