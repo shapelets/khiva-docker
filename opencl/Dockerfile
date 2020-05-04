@@ -62,7 +62,7 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     add-apt-repository ppa:intel-opencl/intel-opencl && \
     apt-get update && \
     apt-get install -y intel-opencl-icd clinfo && \
-    git clone -b v0.5.0 --depth 1 --recurse-submodules -j 8 https://github.com/shapelets/khiva.git && \
+    git clone -b ${KHIVA_BRANCH} --depth 1 --recurse-submodules -j 8 https://github.com/shapelets/khiva.git && \
     cd khiva && \
     mkdir build && \
     cd build && \
