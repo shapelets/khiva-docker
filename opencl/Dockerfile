@@ -1,4 +1,4 @@
-FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS build
+FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS khiva-opencl-builder-base
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -30,12 +30,11 @@ COPY *.patch ./
 # http://arrayfire.org/docs/configuring_environment.htm#af_disable_graphics
 # for more information
 # For build instructions: https://github.com/arrayfire/arrayfire/wiki/Build-Instructions-for-Linux
-FROM build AS build-arrayfire
+FROM khiva-opencl-builder-base AS arrayfire-opencl-builder
 ENV AF_DISABLE_GRAPHICS=1
-RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
+RUN git clone -b v3.6.2 --depth 1 --recurse-submodules -j 8 https://github.com/arrayfire/arrayfire.git && \
     cd arrayfire && \
-    git checkout tags/v3.6.2 && \ 
-	git apply /root/fix_queue.patch && \
+    git apply /root/fix_queue.patch && \
     git apply /root/fix_sort.patch && \
     git apply /root/fix_sparse.patch && \
     mkdir build && cd build && \
@@ -54,29 +53,18 @@ RUN git clone --recursive https://github.com/arrayfire/arrayfire.git && \
              -DAF_WITH_STATIC_FREEIMAGE=OFF && \
     cmake --build . --target install -- -j8 
 
-FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS arrayfire-intel-opencl
-COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    libopenblas-base \
-    libfftw3-3 \
-    liblapacke && \
-    echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
-    ldconfig
-
-# TODO: Add ctest step at the end when tests are stable in terms of accuracy.
-FROM build AS build-khiva
+FROM khiva-opencl-builder-base AS khiva-builder
+ARG KHIVA_BRANCH=v0.5.0
 WORKDIR /root
-COPY --from=build-arrayfire /opt/arrayfire /opt/arrayfire
+COPY --from=arrayfire-opencl-builder /opt/arrayfire /opt/arrayfire
 RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
     ldconfig && \
     add-apt-repository ppa:intel-opencl/intel-opencl && \
     apt-get update && \
     apt-get install -y intel-opencl-icd clinfo && \
-    git clone --recurse-submodules https://github.com/shapelets/khiva.git && \
+    git clone -b v0.5.0 --depth 1 --recurse-submodules -j 8 https://github.com/shapelets/khiva.git && \
     cd khiva && \
-    git checkout tags/v0.4.0 && \
-	mkdir build && \
+    mkdir build && \
     cd build && \
     conan install .. --build missing && \
     cmake .. -DCMAKE_BUILD_TYPE=Release \
@@ -89,7 +77,17 @@ RUN echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
         -DKHIVA_BUILD_JNI_BINDINGS=OFF && \
     cmake --build . --target install -- -j8
 
+FROM intelopencl/intel-opencl:ubuntu-18.04-ppa AS arrayfire-intel-opencl
+COPY --from=arrayfire-opencl-builder /opt/arrayfire /opt/arrayfire
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libopenblas-base \
+    libfftw3-3 \
+    liblapacke && \
+    echo /opt/arrayfire/lib > /etc/ld.so.conf.d/arrayfire.conf && \
+    ldconfig
+
 FROM arrayfire-intel-opencl as khiva-intel-opencl
-COPY --from=build-khiva /opt/khiva /opt/khiva
+COPY --from=khiva-builder /opt/khiva /opt/khiva
 RUN echo /opt/khiva/lib > /etc/ld.so.conf.d/khiva.conf && \
     ldconfig
